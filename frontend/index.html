@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html class="light h-full" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>SaralSetu - Smart Form & Document Assistant</title>
+  
+  <!-- Tailwind CSS CDN with Forms and Container Queries -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Google Fonts: Noto Sans & Atkinson Hyperlegible Next -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;500;600;700&family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+  
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind Configuration matching DESIGN.md -->
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#070235",
+            "on-primary": "#ffffff",
+            "primary-container": "#1e1b4b",
+            "on-primary-container": "#8683ba",
+            "inverse-primary": "#c4c1fb",
+            "primary-fixed": "#e3dfff",
+            "primary-fixed-dim": "#c4c1fb",
+            "on-primary-fixed": "#181445",
+            "on-primary-fixed-variant": "#444173",
+
+            "secondary": "#0051d5",
+            "on-secondary": "#ffffff",
+            "secondary-container": "#316bf3",
+            "on-secondary-container": "#fefcff",
+            "secondary-fixed": "#dbe1ff",
+            "secondary-fixed-dim": "#b4c5ff",
+            "on-secondary-fixed": "#00174b",
+            "on-secondary-fixed-variant": "#003ea8",
+
+            "tertiary": "#000f07",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#002819",
+            "on-tertiary-container": "#179c6e",
+            "tertiary-fixed": "#85f8c4",
+            "tertiary-fixed-dim": "#68dba9",
+            "on-tertiary-fixed": "#002114",
+            "on-tertiary-fixed-variant": "#005137",
+
+            "surface": "#f7f9fb",
+            "surface-dim": "#d8dadc",
+            "surface-bright": "#f7f9fb",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f2f4f6",
+            "surface-container": "#eceef0",
+            "surface-container-high": "#e6e8ea",
+            "surface-container-highest": "#e0e3e5",
+            "surface-variant": "#e0e3e5",
+
+            "on-surface": "#191c1e",
+            "on-surface-variant": "#47464f",
+            "inverse-surface": "#2d3133",
+            "inverse-on-surface": "#eff1f3",
+
+            "outline": "#787680",
+            "outline-variant": "#c8c5d0",
+            "surface-tint": "#5b598c",
+
+            "error": "#ba1a1a",
+            "on-error": "#ffffff",
+            "error-container": "#ffdad6",
+            "on-error-container": "#93000a",
+
+            "background": "#f7f9fb",
+            "on-background": "#191c1e"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "sm": "0.25rem",
+            "md": "0.5rem",
+            "lg": "0.75rem",
+            "xl": "1rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "base": "4px",
+            "xs": "4px",
+            "sm": "8px",
+            "md": "16px",
+            "lg": "24px",
+            "xl": "48px",
+            "gutter": "20px",
+            "container-max": "1280px"
+          },
+          fontFamily: {
+            "h1": ["Noto Sans", "sans-serif"],
+            "h2": ["Noto Sans", "sans-serif"],
+            "h3": ["Noto Sans", "sans-serif"],
+            "h1-mobile": ["Noto Sans", "sans-serif"],
+            "body": ["Noto Sans", "sans-serif"],
+            "label-bold": ["Atkinson Hyperlegible Next", "Noto Sans", "sans-serif"],
+            "label-sm": ["Atkinson Hyperlegible Next", "Noto Sans", "sans-serif"]
+          },
+          fontSize: {
+            "h1": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "h2": ["18px", { "lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "500" }],
+            "h3": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "600" }],
+            "h1-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "body": ["15px", { "lineHeight": "22px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "label-bold": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "700" }],
+            "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }]
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="stylesheet" href="style.css"/>
+</head>
+
+<body class="bg-background text-on-background font-body m-0 p-0 overflow-x-hidden flex h-screen">
+
+  <!-- ========================================================================= -->
+  <!-- SideNavBar (Desktop persistent, collapses on mobile)                     -->
+  <!-- ========================================================================= -->
+  <nav class="hidden md:flex flex-col h-full p-md bg-surface-bright dark:bg-surface-dim h-screen w-64 left-0 top-0 border-r border-outline-variant/20 flex-shrink-0 z-20">
+    
+    <!-- Brand Header -->
+    <div class="flex items-center gap-sm mb-xl px-sm pt-sm cursor-pointer" onclick="switchView('dashboard')">
+      <div class="w-10 h-10 rounded-full bg-primary dark:bg-primary-fixed flex items-center justify-center text-on-primary dark:text-primary font-bold shadow-sm">
+        <span class="material-symbols-outlined fill text-[22px]">assignment</span>
+      </div>
+      <div>
+        <h1 class="font-h2 text-h2 font-bold text-primary dark:text-primary-fixed leading-tight">SaralSetu</h1>
+        <p class="font-label-sm text-label-sm text-on-surface-variant" data-i18n="tagline">Smart Form Assistant</p>
+      </div>
+    </div>
+
+    <!-- CTA Button -->
+    <button class="mb-lg w-full bg-secondary text-on-secondary py-sm px-md rounded-lg font-label-bold text-label-bold hover:brightness-90 active:scale-[0.98] transition-all flex items-center justify-center gap-xs shadow-sm" onclick="switchView('saralfill')">
+      <span class="material-symbols-outlined text-[18px]">add</span>
+      <span data-i18n="newAssistant">New Assistant</span>
+    </button>
+
+    <!-- Navigation Links -->
+    <div class="flex flex-col gap-xs flex-grow">
+      <a data-route="dashboard" class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container transition-all duration-200 ease-in-out rounded-lg font-label-bold text-label-bold group cursor-pointer" href="#">
+        <span class="material-symbols-outlined group-hover:text-secondary transition-colors">dashboard</span>
+        <span data-i18n="home">Home</span>
+      </a>
+
+      <a data-route="saralfill" class="flex items-center gap-md px-md py-sm bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-lg font-label-bold text-label-bold transition-all duration-200 ease-in-out group cursor-pointer" href="#">
+        <span class="material-symbols-outlined fill">dynamic_form</span>
+        <span>SaralFill</span>
+      </a>
+
+      <a data-route="saralread" class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container transition-all duration-200 ease-in-out rounded-lg font-label-bold text-label-bold group cursor-pointer" href="#">
+        <span class="material-symbols-outlined group-hover:text-secondary transition-colors">picture_as_pdf</span>
+        <span>SaralRead</span>
+      </a>
+
+      <a data-route="myforms" class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container transition-all duration-200 ease-in-out rounded-lg font-label-bold text-label-bold group cursor-pointer" href="#">
+        <span class="material-symbols-outlined group-hover:text-secondary transition-colors">description</span>
+        <span data-i18n="myForms">My Forms</span>
+      </a>
+
+      <a data-route="documents" class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container transition-all duration-200 ease-in-out rounded-lg font-label-bold text-label-bold group cursor-pointer" href="#">
+        <span class="material-symbols-outlined group-hover:text-secondary transition-colors">folder_open</span>
+        <span data-i18n="documents">Documents</span>
+      </a>
+
+      <a data-route="settings" class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container transition-all duration-200 ease-in-out rounded-lg font-label-bold text-label-bold group cursor-pointer" href="#">
+        <span class="material-symbols-outlined group-hover:text-secondary transition-colors">settings</span>
+        <span data-i18n="settings">Settings</span>
+      </a>
+    </div>
+
+    <!-- Footer Links -->
+    <div class="mt-auto flex flex-col gap-xs pt-md border-t border-outline-variant/20">
+      <a class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container transition-all duration-200 ease-in-out rounded-lg font-label-bold text-label-bold group cursor-pointer" onclick="askQuickAssistant('How does SaralSetu protect my data?')">
+        <span class="material-symbols-outlined group-hover:text-secondary transition-colors">help_outline</span>
+        <span data-i18n="help">Help & FAQs</span>
+      </a>
+      <a class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container transition-all duration-200 ease-in-out rounded-lg font-label-bold text-label-bold group cursor-pointer btn-open-auth">
+        <span class="material-symbols-outlined group-hover:text-secondary transition-colors">account_circle</span>
+        <span>Account / Login</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- Main Content Wrapper                                                      -->
+  <!-- ========================================================================= -->
+  <div class="flex-1 flex flex-col h-full overflow-hidden relative">
+
+    <!-- TopNavBar -->
+    <header class="bg-surface-container-lowest dark:bg-surface-container-lowest w-full top-0 flat no shadows z-10 border-b border-outline-variant/20 shrink-0">
+      <div class="flex justify-between items-center px-md md:px-lg py-sm max-w-container-max mx-auto h-[64px]">
+        
+        <!-- Mobile Brand (Visible only when SideNav is hidden) -->
+        <div class="md:hidden flex items-center gap-sm cursor-pointer" onclick="switchView('dashboard')">
+          <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+            <span class="material-symbols-outlined fill text-[18px]">assignment</span>
+          </div>
+          <span class="font-h1-mobile text-h1-mobile font-bold text-primary dark:text-primary-fixed">SaralSetu</span>
+        </div>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex gap-lg h-full items-center pl-sm">
+          <a data-route="dashboard" class="topnav-link h-full flex items-center text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors font-h3 text-h3 cursor-pointer active:opacity-70 px-xs border-b-2 border-transparent" href="#">
+            Dashboard
+          </a>
+          <a data-route="saralfill" class="topnav-link h-full flex items-center text-secondary dark:text-secondary-fixed border-b-2 border-secondary font-h3 text-h3 cursor-pointer active:opacity-70 px-xs" href="#">
+            SaralFill
+          </a>
+          <a data-route="saralread" class="topnav-link h-full flex items-center text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors font-h3 text-h3 cursor-pointer active:opacity-70 px-xs border-b-2 border-transparent" href="#">
+            SaralRead
+          </a>
+        </nav>
+
+        <!-- Right Quick Actions -->
+        <div class="flex items-center gap-xs md:gap-sm ml-auto">
+          
+          <!-- Language Toggle -->
+          <button class="lang-toggle-btn text-secondary dark:text-secondary-fixed hover:bg-surface-container-low dark:hover:bg-surface-container p-sm rounded-full transition-colors cursor-pointer active:scale-95 flex items-center justify-center gap-1 text-xs font-label-bold" title="Toggle Language (English / हिन्दी)">
+            <span class="material-symbols-outlined text-[20px]">language</span>
+            <span class="hidden sm:inline">EN/हिन्दी</span>
+          </button>
+
+          <!-- Theme Toggle -->
+          <button class="theme-toggle-btn text-secondary dark:text-secondary-fixed hover:bg-surface-container-low dark:hover:bg-surface-container p-sm rounded-full transition-colors cursor-pointer active:scale-95 flex items-center justify-center" title="Toggle Dark/Light Mode">
+            <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+          </button>
+
+          <!-- DigiLocker Verified Badge -->
+          <div class="hidden sm:flex items-center gap-1 bg-tertiary-fixed-dim/30 border border-tertiary-container/20 px-sm py-1 rounded-full text-xs font-medium text-tertiary-container dark:text-tertiary-fixed">
+            <span class="material-symbols-outlined text-[16px] text-tertiary-container dark:text-tertiary-fixed">verified</span>
+            <span>DigiLocker Linked</span>
+          </div>
+
+          <!-- User Account / Login Button -->
+          <button class="user-avatar-btn btn-open-auth text-secondary dark:text-secondary-fixed hover:bg-surface-container-low dark:hover:bg-surface-container p-1 rounded-full transition-colors cursor-pointer active:scale-95 flex items-center justify-center" title="User Profile">
+            <span class="material-symbols-outlined text-[28px]">account_circle</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ======================================================================= -->
+    <!-- VIEW 1: SARALFILL (FORM ASSISTANT)                                      -->
+    <!-- ======================================================================= -->
+    <main id="view-saralfill" class="app-view flex-1 overflow-y-auto p-md md:p-lg lg:p-xl flex flex-col items-center bg-surface dark:bg-surface">
+      <div class="w-full max-w-[800px] flex flex-col gap-lg md:gap-xl">
+        
+        <!-- Header Section -->
+        <div class="text-center mb-xs">
+          <h2 class="font-h1 text-h1 md:text-[30px] md:leading-[38px] text-primary dark:text-primary-fixed mb-sm" data-i18n="analyzeForm">Analyze External Form</h2>
+          <p class="font-body text-body text-on-surface-variant max-w-[620px] mx-auto leading-relaxed" data-i18n="analyzeDesc">
+            Enter the URL of an online form or service page. SaralSetu will scan the page, identify necessary fields, and prepare an accessible smart form interface for you.
+          </p>
+        </div>
+
+        <!-- Input Card (Elevated Card with subtle glow) -->
+        <div class="bg-surface-container-lowest dark:bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-md md:p-lg shadow-[0_4px_16px_rgba(0,0,0,0.04)] relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-36 h-36 bg-primary-fixed opacity-25 dark:opacity-10 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+          
+          <div class="relative z-10 flex flex-col gap-md">
+            <label class="font-h3 text-h3 text-on-surface flex items-center gap-xs" for="url-input">
+              <span class="material-symbols-outlined text-secondary text-[20px]">link</span>
+              <span data-i18n="formUrl">Form URL</span>
+            </label>
+
+            <div class="flex flex-col sm:flex-row gap-sm items-stretch">
+              <div class="relative flex-grow">
+                <span class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none text-outline">
+                  <span class="material-symbols-outlined text-[20px]">search</span>
+                </span>
+                <input class="w-full pl-xl pr-md py-md bg-surface dark:bg-surface-container-low rounded-lg border border-outline-variant focus:border-secondary focus:ring-2 focus:ring-secondary/20 focus:outline-none transition-all font-body text-body text-on-surface placeholder:text-outline h-full" id="url-input" placeholder="https://example-gov.org/application-form" type="url" value="https://demo.gov/tax-declaration-2024"/>
+              </div>
+
+              <button id="btn-analyze-form" class="bg-secondary text-on-secondary px-lg py-md rounded-lg font-label-bold text-label-bold hover:brightness-90 active:scale-[0.98] transition-all flex items-center justify-center gap-sm whitespace-nowrap min-w-[150px] shadow-sm">
+                <span class="material-symbols-outlined text-[18px]">document_scanner</span>
+                <span data-i18n="analyzeBtn">Analyze Form</span>
+              </button>
+            </div>
+
+            <!-- Quick sample links -->
+            <div class="flex items-center gap-xs flex-wrap text-xs text-on-surface-variant">
+              <span class="font-medium text-outline">Try samples:</span>
+              <button class="text-secondary hover:underline cursor-pointer" onclick="document.getElementById('url-input').value='https://incometax.gov.in/iec/foportal/form16-filing'; document.getElementById('btn-analyze-form').click();">Income Tax Form 16</button> •
+              <button class="text-secondary hover:underline cursor-pointer" onclick="document.getElementById('url-input').value='https://pmay-urban.gov.in/apply-beneficiary'; document.getElementById('btn-analyze-form').click();">PMAY Housing Scheme</button> •
+              <button class="text-secondary hover:underline cursor-pointer" onclick="document.getElementById('url-input').value='https://portal2.passportindia.gov.in/reissue'; document.getElementById('btn-analyze-form').click();">Passport Re-issue</button>
+            </div>
+
+            <p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-xs mt-xs">
+              <span class="material-symbols-outlined text-[15px] text-secondary">info</span>
+              Ensure the URL is publicly accessible or requires standard portal authentication.
+            </p>
+          </div>
+        </div>
+
+        <!-- Scanning Progress Bar (Shown during scan) -->
+        <div id="scan-progress-container" class="hidden bg-surface-container-lowest dark:bg-surface-container-lowest rounded-xl border border-secondary/30 p-lg shadow-sm flex flex-col gap-md relative overflow-hidden">
+          <div class="scanning-bar"></div>
+          <div class="flex items-center gap-md">
+            <div class="w-10 h-10 rounded-full bg-secondary-fixed dark:bg-secondary-container flex items-center justify-center text-secondary dark:text-secondary-fixed animate-spin">
+              <span class="material-symbols-outlined">sync</span>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-label-bold text-label-bold text-on-surface">Scanning DOM Tree & Extracting Input Controls...</h4>
+              <p class="font-label-sm text-label-sm text-outline">Resolving field types, data validation constraints, and DigiLocker mapping</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Analysis Results Preview (Visible after analysis) -->
+        <div id="analysis-results-container" class="animate-fade-in-up flex flex-col gap-md">
+          <div class="flex items-center justify-between border-b border-outline-variant/20 pb-sm">
+            <h3 class="font-h2 text-h2 text-on-surface flex items-center gap-sm">
+              <span class="material-symbols-outlined text-tertiary-container bg-tertiary-fixed-dim rounded-full p-xs text-[18px]">check_circle</span>
+              <span data-i18n="detectedFields">Detected Fields Preview</span>
+            </h3>
+            <span id="detected-fields-count" class="font-label-bold text-label-bold text-secondary bg-secondary-fixed px-sm py-xs rounded-full text-xs">
+              6 Fields Found
+            </span>
+          </div>
+
+          <!-- Grid of detected fields -->
+          <div id="detected-fields-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-sm">
+            <!-- Populated via JavaScript -->
+          </div>
+
+          <!-- Bottom Action Buttons -->
+          <div class="mt-md flex justify-end gap-sm">
+            <button id="btn-discard-analysis" class="border border-outline text-secondary dark:text-secondary-fixed px-lg py-sm rounded-lg font-label-bold text-label-bold hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors">
+              Discard
+            </button>
+            <button id="btn-generate-smart-form" class="bg-secondary text-on-secondary px-lg py-sm rounded-lg font-label-bold text-label-bold hover:brightness-90 active:scale-[0.98] transition-all shadow-sm flex items-center gap-xs">
+              <span class="material-symbols-outlined text-[18px]">bolt</span>
+              <span data-i18n="generateSmartForm">Generate Smart Form</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ======================================================================= -->
+    <!-- VIEW 2: SARALREAD (PDF & DOCUMENT ASSISTANT)                            -->
+    <!-- ======================================================================= -->
+    <main id="view-saralread" class="app-view hidden flex-1 overflow-y-auto bg-surface dark:bg-surface p-md md:p-lg lg:p-xl">
+      <div class="max-w-container-max mx-auto w-full flex flex-col gap-lg">
+        
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-md border-b border-outline-variant/20 pb-md">
+          <div>
+            <h1 class="font-h1 text-h1 text-primary dark:text-primary-fixed" data-i18n="saralReadTitle">SaralRead</h1>
+            <p class="font-body text-body text-on-surface-variant mt-xs" data-i18n="saralReadDesc">Upload a complex document to automatically extract key information and eligibility criteria.</p>
+          </div>
+
+          <div class="flex items-center gap-sm">
+            <button id="btn-play-audio" class="bg-secondary text-on-secondary px-md py-sm rounded-lg font-label-bold text-label-bold hover:brightness-90 flex items-center gap-xs transition-all shadow-sm">
+              <span class="material-symbols-outlined text-[18px]">volume_up</span>
+              <span data-i18n="readAloud">Read Aloud (Audio)</span>
+            </button>
+            <div id="audio-waveform" class="hidden flex items-center gap-1 px-sm py-1 bg-surface-container-high rounded-full">
+              <div class="audio-bar"></div>
+              <div class="audio-bar"></div>
+              <div class="audio-bar"></div>
+              <div class="audio-bar"></div>
+              <div class="audio-bar"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upload Zone -->
+        <input type="file" id="pdf-file-input" accept=".pdf,.doc,.docx" class="hidden"/>
+        <div id="pdf-drop-zone" class="w-full bg-surface-container-lowest dark:bg-surface-container-lowest border-2 border-dashed border-outline-variant rounded-xl p-lg md:p-xl flex flex-col items-center justify-center text-center transition-all hover:border-secondary hover:bg-surface-container-low cursor-pointer group shadow-sm">
+          <div class="w-16 h-16 bg-secondary-fixed rounded-full flex items-center justify-center mb-md group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-secondary" style="font-size: 32px;">upload_file</span>
+          </div>
+          <h3 class="font-h3 text-h3 text-on-surface mb-xs" data-i18n="dropPdf">Drag and drop your PDF here</h3>
+          <p class="font-body text-body text-on-surface-variant mb-md" data-i18n="orClick">or click to browse from your computer</p>
+          
+          <div class="flex items-center gap-sm">
+            <button class="bg-surface dark:bg-surface-container text-secondary dark:text-secondary-fixed border border-secondary px-lg py-sm rounded-lg font-label-bold text-label-bold hover:bg-secondary-fixed/50 transition-colors">
+              <span data-i18n="selectFile">Select File</span>
+            </button>
+            <span class="text-xs text-outline">Supported: PDF, scanned gazette, policy circulations</span>
+          </div>
+
+          <div class="mt-md flex items-center gap-xs text-xs text-on-surface-variant bg-surface-container-low dark:bg-surface-container px-md py-1.5 rounded-full">
+            <span class="material-symbols-outlined text-[16px] text-tertiary-container dark:text-tertiary-fixed">task_alt</span>
+            <span>Currently Loaded: <strong id="uploaded-file-name">PM_Awas_Yojana_Urban_Guidelines_2024.pdf</strong></span>
+          </div>
+        </div>
+
+        <!-- Analysis Section -->
+        <div class="mt-sm border-t border-outline-variant/30 pt-md">
+          <div class="flex justify-between items-center mb-md">
+            <h2 class="font-h2 text-h2 text-primary dark:text-primary-fixed" data-i18n="analysisResults">Analysis Results</h2>
+            <button id="btn-analyze-doc" class="bg-secondary text-on-secondary px-md py-sm rounded-lg font-label-bold text-label-bold hover:brightness-90 flex items-center gap-xs transition-all shadow-sm">
+              <span class="material-symbols-outlined" style="font-size: 18px;">auto_awesome</span>
+              <span>Re-Analyze PDF</span>
+            </button>
+          </div>
+
+          <!-- Bento Grid Layout for Results -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+            
+            <!-- Card 1: Key Dates -->
+            <div class="bg-surface-container-lowest dark:bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-md md:p-lg shadow-sm flex flex-col gap-sm">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-sm text-secondary dark:text-secondary-fixed">
+                  <span class="material-symbols-outlined">event</span>
+                  <span class="font-label-bold text-label-bold" data-i18n="keyDates">Key Dates & Deadlines</span>
+                </div>
+                <span class="text-xs bg-secondary-fixed text-on-secondary-fixed px-xs py-0.5 rounded font-bold">4 Extracted</span>
+              </div>
+              <div id="saralread-dates-list" class="flex flex-col gap-xs mt-sm">
+                <!-- Populated via JS -->
+              </div>
+              <div class="mt-auto pt-sm border-t border-outline-variant/10 text-on-surface-variant font-label-sm text-label-sm flex items-center justify-between">
+                <span class="text-tertiary-container dark:text-tertiary-fixed flex items-center gap-1 font-medium">
+                  <span class="material-symbols-outlined text-[14px]">notifications_active</span> Auto Reminders Enabled
+                </span>
+              </div>
+            </div>
+
+            <!-- Card 2: Eligibility Criteria -->
+            <div class="bg-surface-container-lowest dark:bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-md md:p-lg shadow-sm flex flex-col gap-sm">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-sm text-tertiary-container dark:text-tertiary-fixed">
+                  <span class="material-symbols-outlined">fact_check</span>
+                  <span class="font-label-bold text-label-bold" data-i18n="eligibility">Eligibility Criteria</span>
+                </div>
+                <span class="text-xs bg-tertiary-fixed text-on-tertiary-fixed px-xs py-0.5 rounded font-bold">Interactive</span>
+              </div>
+              <p class="text-xs text-outline">Check conditions matching your profile:</p>
+              <div id="saralread-eligibility-list" class="flex flex-col gap-xs mt-xs">
+                <!-- Populated via JS -->
+              </div>
+              <div class="mt-auto pt-sm border-t border-outline-variant/10 text-on-surface-variant font-label-sm text-label-sm">
+                Matches 3 of 4 required criteria for PMAY-U
+              </div>
+            </div>
+
+            <!-- Card 3: Document Summary -->
+            <div class="bg-surface-container-lowest dark:bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-md md:p-lg shadow-sm flex flex-col gap-sm">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-sm text-primary dark:text-primary-fixed">
+                  <span class="material-symbols-outlined">summarize</span>
+                  <span class="font-label-bold text-label-bold" data-i18n="docSummary">Document Summary</span>
+                </div>
+                <span class="text-xs bg-primary-fixed text-on-primary-fixed px-xs py-0.5 rounded font-bold">Plain Language</span>
+              </div>
+              <div class="bg-surface dark:bg-surface-container-low p-md rounded-lg border border-outline-variant/20 mt-xs">
+                <p id="saralread-summary-text" class="font-body text-body text-on-surface leading-relaxed text-sm">
+                  Pradhan Mantri Awas Yojana (Urban) provides central assistance to Urban Local Bodies and States/UTs for providing houses to all eligible families/beneficiaries against validated demand for housing by 2024. Beneficiaries get up to ₹2.67 Lakh interest subsidy under Credit Linked Subsidy Scheme (CLSS).
+                </p>
+              </div>
+              <div class="mt-auto pt-sm border-t border-outline-variant/10 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+                <span>Confidence Score: <strong>99.4%</strong></span>
+                <button class="text-secondary hover:underline cursor-pointer" onclick="switchView('saralfill')">Auto-Fill Form →</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ======================================================================= -->
+    <!-- VIEW 3: DASHBOARD (HOME)                                                -->
+    <!-- ======================================================================= -->
+    <main id="view-dashboard" class="app-view hidden flex-1 overflow-y-auto bg-surface dark:bg-surface p-md md:p-lg lg:p-xl">
+      <div class="max-w-container-max mx-auto w-full flex flex-col gap-lg">
+        
+        <!-- Welcome Banner -->
+        <div class="bg-primary-container text-on-primary rounded-2xl p-lg md:p-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-lg relative overflow-hidden shadow-sm">
+          <div class="relative z-10">
+            <span class="px-sm py-1 bg-secondary text-on-secondary rounded-full text-xs font-label-bold uppercase tracking-wider mb-sm inline-block">Citizen Dashboard</span>
+            <h1 class="font-h1 text-[26px] md:text-[32px] font-bold text-white mb-xs">Welcome to SaralSetu</h1>
+            <p class="text-primary-fixed max-w-xl text-sm leading-relaxed">Your intelligent bridge to government services, smart form filling, and plain-language document analysis.</p>
+          </div>
+          <div class="flex items-center gap-sm relative z-10">
+            <button class="bg-secondary text-on-secondary px-lg py-md rounded-lg font-label-bold text-label-bold hover:brightness-90 active:scale-95 transition-all shadow-md flex items-center gap-xs" onclick="switchView('saralfill')">
+              <span class="material-symbols-outlined text-[18px]">search</span>
+              Analyze Form
+            </button>
+            <button class="bg-white/10 text-white hover:bg-white/20 border border-white/20 px-lg py-md rounded-lg font-label-bold text-label-bold transition-all flex items-center gap-xs" onclick="switchView('saralread')">
+              <span class="material-symbols-outlined text-[18px]">upload_file</span>
+              Upload PDF
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-md">
+          <div class="bg-surface-container-lowest dark:bg-surface-container-lowest p-md rounded-xl border border-outline-variant/20 flex flex-col gap-xs shadow-sm">
+            <span class="text-outline font-label-sm text-xs">Forms Processed</span>
+            <span class="font-h1 text-[28px] font-bold text-primary dark:text-primary-fixed">14</span>
+            <span class="text-xs text-tertiary-container dark:text-tertiary-fixed font-medium">↑ 100% submission rate</span>
+          </div>
+          <div class="bg-surface-container-lowest dark:bg-surface-container-lowest p-md rounded-xl border border-outline-variant/20 flex flex-col gap-xs shadow-sm">
+            <span class="text-outline font-label-sm text-xs">Documents Analyzed</span>
+            <span class="font-h1 text-[28px] font-bold text-secondary dark:text-secondary-fixed">8</span>
+            <span class="text-xs text-outline font-medium">Key dates tracked</span>
+          </div>
+          <div class="bg-surface-container-lowest dark:bg-surface-container-lowest p-md rounded-xl border border-outline-variant/20 flex flex-col gap-xs shadow-sm">
+            <span class="text-outline font-label-sm text-xs">Average Time Saved</span>
+            <span class="font-h1 text-[28px] font-bold text-tertiary-container dark:text-tertiary-fixed">45 mins</span>
+            <span class="text-xs text-outline font-medium">Per online application</span>
+          </div>
+          <div class="bg-surface-container-lowest dark:bg-surface-container-lowest p-md rounded-xl border border-outline-variant/20 flex flex-col gap-xs shadow-sm">
+            <span class="text-outline font-label-sm text-xs">DigiLocker Status</span>
+            <span class="font-h1 text-[28px] font-bold text-secondary dark:text-secondary-fixed">Linked</span>
+            <span class="text-xs text-tertiary-container dark:text-tertiary-fixed font-medium">✓ e-KYC Verified</span>
+          </div>
+        </div>
+
+        <!-- Recent Forms Table -->
+        <div class="bg-surface-container-lowest dark:bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-md md:p-lg shadow-sm flex flex-col gap-md">
+          <div class="flex items-center justify-between">
+            <h3 class="font-h2 text-h2 text-primary dark:text-primary-fixed">Recent Form Applications</h3>
+            <button class="text-secondary hover:underline font-label-bold text-xs" onclick="switchView('myforms')">View All (4) →</button>
+          </div>
+          <div id="dashboard-recent-forms" class="flex flex-col gap-sm">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ======================================================================= -->
+    <!-- VIEW 4: MY FORMS                                                        -->
+    <!-- ======================================================================= -->
+    <main id="view-myforms" class="app-view hidden flex-1 overflow-y-auto bg-surface dark:bg-surface p-md md:p-lg lg:p-xl">
+      <div class="max-w-container-max mx-auto w-full flex flex-col gap-lg">
+        <div class="flex justify-between items-center border-b border-outline-variant/20 pb-sm">
+          <div>
+            <h1 class="font-h1 text-h1 text-primary dark:text-primary-fixed">My Form Applications</h1>
+            <p class="font-body text-body text-on-surface-variant text-sm mt-xs">Track, manage and download your auto-filled smart forms.</p>
+          </div>
+          <button class="bg-secondary text-on-secondary px-md py-sm rounded-lg font-label-bold text-label-bold hover:brightness-90 flex items-center gap-xs" onclick="switchView('saralfill')">
+            <span class="material-symbols-outlined text-[18px]">add</span>
+            <span>New Form</span>
+          </button>
+        </div>
+        <div id="all-forms-list" class="flex flex-col gap-sm">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+    </main>
+
+    <!-- ======================================================================= -->
+    <!-- VIEW 5: DOCUMENTS                                                       -->
+    <!-- ======================================================================= -->
+    <main id="view-documents" class="app-view hidden flex-1 overflow-y-auto bg-surface dark:bg-surface p-md md:p-lg lg:p-xl">
+      <div class="max-w-container-max mx-auto w-full flex flex-col gap-lg">
+        <div class="flex justify-between items-center border-b border-outline-variant/20 pb-sm">
+          <div>
+            <h1 class="font-h1 text-h1 text-primary dark:text-primary-fixed">Document Vault</h1>
+            <p class="font-body text-body text-on-surface-variant text-sm mt-xs">Uploaded circulars, guidelines, and application rules.</p>
+          </div>
+          <button class="bg-secondary text-on-secondary px-md py-sm rounded-lg font-label-bold text-label-bold hover:brightness-90 flex items-center gap-xs" onclick="switchView('saralread')">
+            <span class="material-symbols-outlined text-[18px]">upload_file</span>
+            <span>Upload Document</span>
+          </button>
+        </div>
+        <div id="all-docs-list" class="flex flex-col gap-sm">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+    </main>
+
+    <!-- ======================================================================= -->
+    <!-- VIEW 6: SETTINGS                                                        -->
+    <!-- ======================================================================= -->
+    <main id="view-settings" class="app-view hidden flex-1 overflow-y-auto bg-surface dark:bg-surface p-md md:p-lg lg:p-xl">
+      <div class="max-w-[700px] mx-auto w-full flex flex-col gap-lg">
+        <div class="border-b border-outline-variant/20 pb-sm">
+          <h1 class="font-h1 text-h1 text-primary dark:text-primary-fixed">Settings & Preferences</h1>
+          <p class="font-body text-body text-on-surface-variant text-sm mt-xs">Manage your DigiLocker sync, languages, and accessibility options.</p>
+        </div>
+
+        <div class="bg-surface-container-lowest dark:bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-lg shadow-sm flex flex-col gap-md">
+          <h3 class="font-h2 text-h2 text-on-surface">e-KYC & DigiLocker Connection</h3>
+          <div class="flex items-center justify-between p-md bg-surface dark:bg-surface-container rounded-lg border border-outline-variant/20">
+            <div class="flex items-center gap-md">
+              <span class="material-symbols-outlined text-secondary text-[28px]">cloud_done</span>
+              <div>
+                <h4 class="font-label-bold text-on-surface">DigiLocker Integration</h4>
+                <p class="text-xs text-outline">Connected: Aarav Sharma (Aadhaar, PAN, Driving Licence)</p>
+              </div>
+            </div>
+            <span class="badge-success px-sm py-xs rounded-full text-xs font-bold">Active</span>
+          </div>
+        </div>
+
+        <div class="bg-surface-container-lowest dark:bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-lg shadow-sm flex flex-col gap-md">
+          <h3 class="font-h2 text-h2 text-on-surface">Language & Accessibility</h3>
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="font-label-bold text-on-surface">Default Application Language</h4>
+              <p class="text-xs text-outline">Select your preferred Indian regional language</p>
+            </div>
+            <select class="bg-surface dark:bg-surface-container border border-outline-variant rounded-md px-md py-sm text-sm" onchange="AppState.language = this.value; updateLanguageUI(); showToast('Language updated', 'success', 'language');">
+              <option value="en">English (India)</option>
+              <option value="hi">हिन्दी (Hindi)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- FLOATING SMART ASSISTANT ACTION BUTTON & DRAWER                           -->
+  <!-- ========================================================================= -->
+  <button id="btn-floating-assistant" class="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary dark:bg-secondary text-on-primary flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all z-40 border-2 border-white/20 animate-pulse-glow" title="Open AI Citizen Assistant">
+    <span class="material-symbols-outlined text-[28px]">smart_toy</span>
+  </button>
+
+  <!-- Assistant Chat Drawer -->
+  <div id="assistant-drawer" class="drawer-closed fixed top-0 right-0 h-full w-full sm:w-96 bg-surface-container-lowest dark:bg-surface-container-highest border-l border-outline-variant/30 shadow-2xl z-50 flex flex-col">
+    <!-- Drawer Header -->
+    <div class="p-md bg-primary dark:bg-surface-dim text-on-primary flex items-center justify-between border-b border-outline-variant/20">
+      <div class="flex items-center gap-sm">
+        <div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary font-bold text-xs">
+          SS
+        </div>
+        <div>
+          <h3 class="font-label-bold text-sm text-white">SaralSetu AI Assistant</h3>
+          <p class="text-[11px] text-primary-fixed opacity-80">24/7 Citizen Scheme & Form Guide</p>
+        </div>
+      </div>
+      <button id="btn-close-assistant" class="text-primary-fixed hover:text-white p-1 rounded-full">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+
+    <!-- Quick Prompts -->
+    <div class="p-sm bg-surface-container-low dark:bg-surface-container border-b border-outline-variant/20 flex gap-xs overflow-x-auto text-xs whitespace-nowrap">
+      <button class="bg-surface-container-lowest dark:bg-surface-container-high px-sm py-1 rounded-full border border-outline-variant/30 hover:border-secondary transition-colors" onclick="askQuickAssistant('What are the benefits of PMAY Housing?')">PMAY Benefits</button>
+      <button class="bg-surface-container-lowest dark:bg-surface-container-high px-sm py-1 rounded-full border border-outline-variant/30 hover:border-secondary transition-colors" onclick="askQuickAssistant('How to link PAN with Aadhaar?')">Link PAN-Aadhaar</button>
+      <button class="bg-surface-container-lowest dark:bg-surface-container-high px-sm py-1 rounded-full border border-outline-variant/30 hover:border-secondary transition-colors" onclick="askQuickAssistant('हिन्दी में सहायता चाहिए')">हिन्दी सहायता</button>
+    </div>
+
+    <!-- Chat Messages -->
+    <div id="assistant-chat-messages" class="flex-1 overflow-y-auto p-md flex flex-col gap-sm">
+      <div class="flex gap-xs items-start animate-fade-in">
+        <div class="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-on-secondary text-[10px] font-bold shrink-0">
+          SS
+        </div>
+        <div class="bg-surface-container-high dark:bg-surface-container text-on-surface text-xs rounded-xl rounded-tl-none px-md py-sm max-w-[85%] leading-relaxed shadow-sm">
+          Namaste! I am your SaralSetu Assistant. How can I help you fill forms or read government schemes today?
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Input -->
+    <div class="p-md border-t border-outline-variant/20 bg-surface dark:bg-surface-dim flex items-center gap-xs">
+      <input id="assistant-chat-input" type="text" placeholder="Ask anything about forms or schemes..." class="flex-1 bg-surface-container-lowest dark:bg-surface-container rounded-lg border border-outline-variant px-md py-sm text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary"/>
+      <button id="btn-send-assistant-msg" class="w-9 h-9 rounded-lg bg-secondary text-on-secondary flex items-center justify-center hover:brightness-90 active:scale-95 transition-all shadow-sm">
+        <span class="material-symbols-outlined text-[18px]">send</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 1: AUTHENTICATION / JOIN SARALSETU (as in saral_setu_signup)        -->
+  <!-- ========================================================================= -->
+  <div id="auth-modal" class="modal-backdrop fixed inset-0 hidden items-center justify-center p-md z-50 animate-fade-in">
+    <div class="w-full max-w-md bg-surface-container-lowest dark:bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-md md:p-lg lg:p-xl flex flex-col gap-md shadow-2xl relative">
+      
+      <!-- Close Button -->
+      <button id="btn-close-auth" class="absolute top-4 right-4 text-outline hover:text-on-surface p-1 rounded-full transition-colors">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+
+      <!-- Header -->
+      <div class="text-center flex flex-col gap-xs">
+        <h1 id="auth-modal-title" class="font-h1 text-h1 text-primary dark:text-primary-fixed">Join SaralSetu</h1>
+        <p class="font-body text-body text-on-surface-variant text-sm">Create your account to start managing forms effortlessly.</p>
+      </div>
+
+      <!-- Social Signup -->
+      <div class="flex flex-col gap-sm">
+        <button class="flex items-center justify-center gap-sm w-full py-sm px-lg border border-outline-variant/30 rounded-lg text-on-surface hover:bg-surface-container-low transition-colors font-label-bold text-label-bold focus:outline-none focus:ring-2 focus:ring-secondary text-sm cursor-pointer" type="button" onclick="handleSocialLogin('Google')">
+          <svg class="w-4 h-4" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          Sign up with Google
+        </button>
+
+        <button class="flex items-center justify-center gap-sm w-full py-sm px-lg border border-outline-variant/30 rounded-lg text-on-surface hover:bg-surface-container-low transition-colors font-label-bold text-label-bold focus:outline-none focus:ring-2 focus:ring-secondary text-sm cursor-pointer" type="button" onclick="handleSocialLogin('DigiLocker')">
+          <span aria-hidden="true" class="material-symbols-outlined text-secondary text-[20px]">cloud_done</span>
+          Sign up with DigiLocker
+        </button>
+      </div>
+
+      <!-- Divider -->
+      <div class="flex items-center gap-md my-xs">
+        <div class="flex-1 h-px bg-outline-variant/20"></div>
+        <span class="font-label-sm text-[11px] text-on-surface-variant uppercase tracking-wider">or register with email</span>
+        <div class="flex-1 h-px bg-outline-variant/20"></div>
+      </div>
+
+      <!-- Signup Form -->
+      <form id="signup-form" class="flex flex-col gap-sm">
+        <div id="auth-name-group" class="flex flex-col gap-xs">
+          <label class="font-label-bold text-label-bold text-on-surface text-xs" for="auth-fullName">Full Name</label>
+          <input class="w-full bg-surface dark:bg-surface-container-low border border-outline-variant rounded-md px-md py-sm font-body text-body text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary transition-colors text-sm" id="auth-fullName" placeholder="Enter your full name" type="text" value="Aarav Sharma"/>
+        </div>
+
+        <div class="flex flex-col gap-xs">
+          <label class="font-label-bold text-label-bold text-on-surface text-xs" for="auth-email">Email Address</label>
+          <input class="w-full bg-surface dark:bg-surface-container-low border border-outline-variant rounded-md px-md py-sm font-body text-body text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary transition-colors text-sm" id="auth-email" placeholder="name@example.com" required="" type="email" value="aarav.sharma@example.com"/>
+        </div>
+
+        <div class="flex flex-col gap-xs">
+          <label class="font-label-bold text-label-bold text-on-surface text-xs" for="auth-password">Password</label>
+          <input class="w-full bg-surface dark:bg-surface-container-low border border-outline-variant rounded-md px-md py-sm font-body text-body text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary focus:border-secondary transition-colors text-sm" id="auth-password" placeholder="Create a strong password" required="" type="password" value="Password@123"/>
+          <p class="font-label-sm text-[11px] text-on-surface-variant">Must be at least 8 characters long.</p>
+        </div>
+
+        <button id="auth-submit-btn" class="mt-sm w-full bg-secondary hover:brightness-90 text-on-secondary font-label-bold text-label-bold py-md px-lg rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 text-sm shadow-sm" type="submit">
+          Create Account
+        </button>
+      </form>
+
+      <!-- Toggle Login/Signup -->
+      <div class="text-center">
+        <p class="font-body text-xs text-on-surface-variant">
+          <span id="auth-toggle-prompt">Already have an account? </span>
+          <a id="toggle-auth-mode" class="text-secondary hover:underline font-label-bold cursor-pointer" href="#">Log In</a>
+        </p>
+      </div>
+
+      <div class="text-center mt-xs">
+        <p class="font-label-sm text-[11px] text-outline">
+          By signing up, you agree to our <a class="underline hover:text-secondary" href="#">Terms of Service</a> and <a class="underline hover:text-secondary" href="#">Privacy Policy</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: DYNAMIC SMART FORM (GENERATED FROM ANALYZER)                    -->
+  <!-- ========================================================================= -->
+  <div id="smart-form-modal" class="modal-backdrop fixed inset-0 hidden items-center justify-center p-md z-50 animate-fade-in">
+    <div class="w-full max-w-2xl bg-surface-container-lowest dark:bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-md md:p-lg flex flex-col gap-md shadow-2xl max-h-[90vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-outline-variant/20 pb-sm">
+        <div>
+          <div class="flex items-center gap-xs">
+            <span class="material-symbols-outlined text-secondary text-[22px]">bolt</span>
+            <h2 class="font-h2 text-h2 text-primary dark:text-primary-fixed">Interactive Smart Form</h2>
+          </div>
+          <p class="text-xs text-on-surface-variant mt-0.5">Destination: <strong class="text-on-surface">https://demo.gov/tax-declaration-2024</strong></p>
+        </div>
+        <button class="text-outline hover:text-on-surface p-1 rounded-full" onclick="closeSmartFormModal()">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- DigiLocker One-Click Auto-Fill Bar -->
+      <div class="bg-secondary-fixed/40 dark:bg-secondary-container/40 p-md rounded-lg flex items-center justify-between gap-md border border-secondary/20">
+        <div class="flex items-center gap-sm">
+          <span class="material-symbols-outlined text-secondary dark:text-secondary-fixed text-[24px]">verified</span>
+          <div>
+            <h4 class="font-label-bold text-xs text-on-surface">DigiLocker e-KYC Ready</h4>
+            <p class="text-[11px] text-on-surface-variant">Auto-populate verified Aadhaar, PAN, and address data with 1 click.</p>
+          </div>
+        </div>
+        <button class="bg-secondary text-on-secondary px-md py-1.5 rounded-lg text-xs font-label-bold hover:brightness-90 transition-all shadow-sm shrink-0 flex items-center gap-1" onclick="handleAutoFillDigiLocker()">
+          <span class="material-symbols-outlined text-[16px]">auto_fix_high</span>
+          Auto-Fill
+        </button>
+      </div>
+
+      <!-- Dynamic Form Body -->
+      <form id="smart-form-submit" onsubmit="handleSubmitSmartForm(event)" class="flex flex-col gap-md">
+        <div id="smart-form-dynamic-fields" class="flex flex-col gap-md">
+          <!-- Rendered dynamically from AppState.saralFill.fields -->
+        </div>
+
+        <div class="flex justify-between items-center pt-md border-t border-outline-variant/20">
+          <button type="button" class="border border-outline text-secondary px-md py-sm rounded-lg text-xs font-label-bold hover:bg-surface-container" onclick="closeSmartFormModal()">
+            Cancel
+          </button>
+          <div class="flex items-center gap-sm">
+            <button type="button" class="border border-secondary text-secondary px-md py-sm rounded-lg text-xs font-label-bold hover:bg-secondary-fixed/40 flex items-center gap-1" onclick="showToast('Exported filled form data as JSON & PDF!', 'success', 'download')">
+              <span class="material-symbols-outlined text-[16px]">download</span>
+              Export Draft
+            </button>
+            <button type="submit" class="bg-secondary text-on-secondary px-lg py-sm rounded-lg text-xs font-label-bold hover:brightness-90 flex items-center gap-1 shadow-sm">
+              <span class="material-symbols-outlined text-[16px]">send</span>
+              Validate & Submit
+            </button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- GLOBAL TOAST NOTIFICATION CONTAINER                                       -->
+  <!-- ========================================================================= -->
+  <div id="toast-container" class="fixed bottom-6 left-6 flex flex-col gap-xs z-50 max-w-sm pointer-events-auto"></div>
+
+  <!-- Application Script -->
+  <script src="app.js"></script>
+</body>
+</html>
