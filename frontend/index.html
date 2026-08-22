@@ -158,6 +158,11 @@
         <span>SaralFill</span>
       </a>
 
+      <a data-route="saralvoice" class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container transition-all duration-200 ease-in-out rounded-lg font-label-bold text-label-bold group cursor-pointer" href="#">
+        <span class="material-symbols-outlined group-hover:text-secondary transition-colors">mic</span>
+        <span>SaralVoice (Real-Time)</span>
+      </a>
+
       <a data-route="saralread" class="flex items-center gap-md px-md py-sm text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-high dark:hover:bg-surface-container transition-all duration-200 ease-in-out rounded-lg font-label-bold text-label-bold group cursor-pointer" href="#">
         <span class="material-symbols-outlined group-hover:text-secondary transition-colors">picture_as_pdf</span>
         <span>SaralRead</span>
@@ -216,6 +221,9 @@
           </a>
           <a data-route="saralfill" class="topnav-link h-full flex items-center text-secondary dark:text-secondary-fixed border-b-2 border-secondary font-h3 text-h3 cursor-pointer active:opacity-70 px-xs" href="#">
             SaralFill
+          </a>
+          <a data-route="saralvoice" class="topnav-link h-full flex items-center text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors font-h3 text-h3 cursor-pointer active:opacity-70 px-xs border-b-2 border-transparent" href="#">
+            SaralVoice
           </a>
           <a data-route="saralread" class="topnav-link h-full flex items-center text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors font-h3 text-h3 cursor-pointer active:opacity-70 px-xs border-b-2 border-transparent" href="#">
             SaralRead
@@ -344,6 +352,242 @@
               <span data-i18n="generateSmartForm">Generate Smart Form</span>
             </button>
           </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- ======================================================================= -->
+    <!-- VIEW: SARALVOICE (REAL-TIME VOICE TRANSLATION & AUTO-FILL)             -->
+    <!-- ======================================================================= -->
+    <main id="view-saralvoice" class="app-view hidden flex-1 overflow-y-auto bg-surface dark:bg-surface p-md md:p-lg lg:p-xl">
+      <div class="max-w-container-max mx-auto w-full flex flex-col gap-lg">
+        
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-md border-b border-outline-variant/20 pb-md">
+          <div>
+            <div class="flex items-center gap-xs mb-xs">
+              <span class="px-sm py-0.5 bg-secondary-fixed text-on-secondary-fixed rounded-full text-xs font-bold flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">bolt</span>
+                Real-Time 10ms-20ms Stream
+              </span>
+              <span class="px-sm py-0.5 bg-tertiary-fixed text-on-tertiary-fixed rounded-full text-xs font-bold">
+                Bhasini 22 Scheduled Languages + OpenAI Whisper
+              </span>
+            </div>
+            <h1 class="font-h1 text-h1 text-primary dark:text-primary-fixed">SaralVoice Translation & Auto-Fill</h1>
+            <p class="font-body text-body text-on-surface-variant mt-xs">Speak naturally in any Indian language. The engine transcribes, translates, and auto-fills official form fields in real-time.</p>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="flex items-center gap-sm">
+            <button id="btn-simulate-voice" class="bg-secondary-container text-on-secondary-container dark:bg-secondary dark:text-on-secondary px-md py-sm rounded-lg font-label-bold text-label-bold hover:brightness-90 flex items-center gap-xs transition-all shadow-sm">
+              <span class="material-symbols-outlined text-[18px]">play_arrow</span>
+              <span>Test Demo Speech</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Language & Audio Control Bar -->
+        <div class="bg-surface-container-lowest dark:bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-md shadow-sm flex flex-col md:flex-row items-center justify-between gap-md">
+          
+          <!-- Source & Target Language Selectors -->
+          <div class="flex items-center gap-md flex-wrap w-full md:w-auto">
+            <div class="flex flex-col gap-xs">
+              <label class="text-xs font-label-bold text-outline uppercase tracking-wider" for="voice-source-lang">Spoken Language (Bhasini ASR)</label>
+              <select id="voice-source-lang" class="bg-surface dark:bg-surface-container border border-outline-variant rounded-lg px-md py-sm text-sm font-label-bold text-on-surface focus:ring-2 focus:ring-secondary">
+                <option value="hi" selected>हिन्दी (Hindi)</option>
+                <option value="bn">বাংলা (Bengali)</option>
+                <option value="ta">தமிழ் (Tamil)</option>
+                <option value="te">తెలుగు (Telugu)</option>
+                <option value="mr">मराठी (Marathi)</option>
+                <option value="gu">ગુજરાતી (Gujarati)</option>
+                <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                <option value="ml">മലയാളം (Malayalam)</option>
+                <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+                <option value="or">ଓଡ଼ିଆ (Odia)</option>
+                <option value="as">অসমীয়া (Assamese)</option>
+                <option value="mai">मैथिली (Maithili)</option>
+                <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ (Santali)</option>
+                <option value="ks">कॉशुर (Kashmiri)</option>
+                <option value="ne">नेपाली (Nepali)</option>
+                <option value="kok">कोंकणी (Konkani)</option>
+                <option value="doi">डोगरी (Dogri)</option>
+                <option value="mni">ꯃꯩꯇꯩꯂꯣꯟ (Manipuri)</option>
+                <option value="sd">सिंधी / سنڌي (Sindhi)</option>
+                <option value="sa">संस्कृतम् (Sanskrit)</option>
+                <option value="brx">बरो (Bodo)</option>
+                <option value="ur">اردو (Urdu)</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+
+            <div class="hidden md:flex items-center text-outline pt-4">
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </div>
+
+            <div class="flex flex-col gap-xs">
+              <label class="text-xs font-label-bold text-outline uppercase tracking-wider" for="voice-target-lang">Translation Target (Bhasini NMT)</label>
+              <select id="voice-target-lang" class="bg-surface dark:bg-surface-container border border-outline-variant rounded-lg px-md py-sm text-sm font-label-bold text-on-surface focus:ring-2 focus:ring-secondary">
+                <option value="en" selected>English (Official Form)</option>
+                <option value="hi">हिन्दी (Hindi)</option>
+                <option value="bn">বাংলা (Bengali)</option>
+                <option value="ta">தமிழ் (Tamil)</option>
+                <option value="te">తెలుగు (Telugu)</option>
+                <option value="mr">मराठी (Marathi)</option>
+                <option value="gu">ગુજરાતી (Gujarati)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Recording Controls & Microphone Button -->
+          <div class="flex items-center gap-md">
+            <div id="voice-stream-status" class="text-xs font-medium text-outline flex items-center gap-xs bg-surface dark:bg-surface-container px-md py-sm rounded-full">
+              <span class="status-dot bg-outline"></span>
+              <span>Microphone Standby</span>
+            </div>
+
+            <button id="btn-toggle-mic" class="bg-secondary text-on-secondary hover:brightness-95 active:scale-95 px-lg py-md rounded-full font-label-bold text-label-bold transition-all shadow-md flex items-center gap-sm">
+              <span class="material-symbols-outlined text-[24px]">mic</span>
+              <span id="mic-btn-text">Start Listening</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Real-Time Audio Visualizer & Streaming Text Area -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+          
+          <!-- Box 1: Recognized Speech Stream -->
+          <div class="bg-surface-container-lowest dark:bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-md md:p-lg shadow-sm flex flex-col gap-sm relative">
+            <div class="flex justify-between items-center border-b border-outline-variant/20 pb-xs">
+              <h3 class="font-label-bold text-label-bold text-on-surface flex items-center gap-xs">
+                <span class="material-symbols-outlined text-secondary text-[20px]">graphic_eq</span>
+                <span>Recognized Speech (Whisper / Bhasini ASR)</span>
+              </h3>
+              <span class="text-[11px] text-outline">Real-Time PCM 20ms Frame</span>
+            </div>
+
+            <!-- Waveform Animation Container -->
+            <div id="voice-audio-bars" class="hidden flex items-center justify-center gap-1 py-xs">
+              <div class="audio-bar"></div>
+              <div class="audio-bar"></div>
+              <div class="audio-bar"></div>
+              <div class="audio-bar"></div>
+              <div class="audio-bar"></div>
+              <div class="audio-bar"></div>
+              <div class="audio-bar"></div>
+            </div>
+
+            <div id="voice-live-transcript" class="min-h-[110px] bg-surface dark:bg-surface-container-low p-md rounded-lg border border-outline-variant/30 text-sm font-body text-on-surface leading-relaxed overflow-y-auto">
+              <span class="text-outline italic">Click "Start Listening" or "Test Demo Speech" to speak. Transcribed text will appear here word-by-word...</span>
+            </div>
+          </div>
+
+          <!-- Box 2: Real-Time Translated Speech -->
+          <div class="bg-surface-container-lowest dark:bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-md md:p-lg shadow-sm flex flex-col gap-sm">
+            <div class="flex justify-between items-center border-b border-outline-variant/20 pb-xs">
+              <h3 class="font-label-bold text-label-bold text-on-surface flex items-center gap-xs">
+                <span class="material-symbols-outlined text-tertiary-container dark:text-tertiary-fixed text-[20px]">translate</span>
+                <span>Live Translation (Bhasini NMT)</span>
+              </h3>
+              <button id="btn-tts-listen" class="text-secondary hover:underline text-xs flex items-center gap-0.5" title="Listen via TTS">
+                <span class="material-symbols-outlined text-[16px]">volume_up</span>
+                <span>Listen Audio</span>
+              </button>
+            </div>
+
+            <div id="voice-live-translation" class="min-h-[110px] bg-surface dark:bg-surface-container-low p-md rounded-lg border border-outline-variant/30 text-sm font-body text-on-surface leading-relaxed overflow-y-auto">
+              <span class="text-outline italic">Translated output for form submission will display here in real-time...</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Live Auto-Filled Form Card -->
+        <div class="bg-surface-container-lowest dark:bg-surface-container-lowest border-2 border-secondary/30 rounded-xl p-md md:p-lg shadow-md flex flex-col gap-md">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-sm border-b border-outline-variant/20 pb-sm">
+            <div>
+              <h3 class="font-h2 text-h2 text-primary dark:text-primary-fixed flex items-center gap-xs">
+                <span class="material-symbols-outlined text-secondary">assignment_turned_in</span>
+                <span>Live Auto-Filled Application Form</span>
+              </h3>
+              <p class="text-xs text-on-surface-variant">Fields below update automatically in real-time as entities (Name, DOB, Address, Mobile, PAN/Aadhaar) are detected in your voice.</p>
+            </div>
+            
+            <div class="flex items-center gap-xs">
+              <button class="px-md py-xs text-xs border border-outline text-outline hover:text-on-surface rounded-md font-label-bold" onclick="resetVoiceForm()">
+                Reset Form
+              </button>
+            </div>
+          </div>
+
+          <!-- Form Fields Grid -->
+          <form id="voice-autofill-form" onsubmit="handleVoiceFormSubmit(event)" class="grid grid-cols-1 md:grid-cols-2 gap-md">
+            
+            <!-- Full Name -->
+            <div class="flex flex-col gap-xs">
+              <label class="font-label-bold text-xs text-on-surface flex items-center gap-xs" for="voice-field-name">
+                <span class="material-symbols-outlined text-[16px] text-secondary">person</span>
+                Full Name
+              </label>
+              <input id="voice-field-name" type="text" placeholder="Auto-fills from spoken name..." class="w-full bg-surface dark:bg-surface-container border border-outline-variant rounded-md px-md py-sm text-sm text-on-surface focus:ring-2 focus:ring-secondary transition-all"/>
+            </div>
+
+            <!-- Date of Birth -->
+            <div class="flex flex-col gap-xs">
+              <label class="font-label-bold text-xs text-on-surface flex items-center gap-xs" for="voice-field-dob">
+                <span class="material-symbols-outlined text-[16px] text-secondary">calendar_today</span>
+                Date of Birth
+              </label>
+              <input id="voice-field-dob" type="date" class="w-full bg-surface dark:bg-surface-container border border-outline-variant rounded-md px-md py-sm text-sm text-on-surface focus:ring-2 focus:ring-secondary transition-all"/>
+            </div>
+
+            <!-- Residential Address -->
+            <div class="flex flex-col gap-xs md:col-span-2">
+              <label class="font-label-bold text-xs text-on-surface flex items-center gap-xs" for="voice-field-address">
+                <span class="material-symbols-outlined text-[16px] text-secondary">home</span>
+                Residential Address
+              </label>
+              <input id="voice-field-address" type="text" placeholder="Auto-fills spoken residential address..." class="w-full bg-surface dark:bg-surface-container border border-outline-variant rounded-md px-md py-sm text-sm text-on-surface focus:ring-2 focus:ring-secondary transition-all"/>
+            </div>
+
+            <!-- Tax ID / PAN / Aadhaar -->
+            <div class="flex flex-col gap-xs">
+              <label class="font-label-bold text-xs text-on-surface flex items-center gap-xs" for="voice-field-taxid">
+                <span class="material-symbols-outlined text-[16px] text-secondary">badge</span>
+                PAN / Aadhaar ID Number
+              </label>
+              <input id="voice-field-taxid" type="text" placeholder="e.g. ABCDE1234F" class="w-full bg-surface dark:bg-surface-container border border-outline-variant rounded-md px-md py-sm text-sm text-on-surface focus:ring-2 focus:ring-secondary transition-all"/>
+            </div>
+
+            <!-- Mobile Number -->
+            <div class="flex flex-col gap-xs">
+              <label class="font-label-bold text-xs text-on-surface flex items-center gap-xs" for="voice-field-mobile">
+                <span class="material-symbols-outlined text-[16px] text-secondary">call</span>
+                Mobile Phone Number
+              </label>
+              <input id="voice-field-mobile" type="tel" placeholder="+91 98765 43210" class="w-full bg-surface dark:bg-surface-container border border-outline-variant rounded-md px-md py-sm text-sm text-on-surface focus:ring-2 focus:ring-secondary transition-all"/>
+            </div>
+
+            <!-- Applied Scheme -->
+            <div class="flex flex-col gap-xs md:col-span-2">
+              <label class="font-label-bold text-xs text-on-surface flex items-center gap-xs" for="voice-field-scheme">
+                <span class="material-symbols-outlined text-[16px] text-secondary">account_balance</span>
+                Selected Government Scheme / Service
+              </label>
+              <input id="voice-field-scheme" type="text" placeholder="e.g. Pradhan Mantri Awas Yojana (PMAY-U)" class="w-full bg-surface dark:bg-surface-container border border-outline-variant rounded-md px-md py-sm text-sm text-on-surface focus:ring-2 focus:ring-secondary transition-all"/>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="md:col-span-2 flex justify-end gap-sm mt-xs">
+              <button type="submit" class="bg-secondary text-on-secondary px-xl py-md rounded-lg font-label-bold text-label-bold hover:brightness-90 active:scale-[0.98] transition-all shadow-md flex items-center gap-xs">
+                <span class="material-symbols-outlined text-[18px]">send</span>
+                <span>Submit Voice Auto-Filled Form</span>
+              </button>
+            </div>
+
+          </form>
+
         </div>
 
       </div>
