@@ -744,38 +744,46 @@
           </div>
         </div>
 
-        <!-- Metric Stat Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-md">
-          <div class="bg-surface-container-lowest dark:bg-surface-container-lowest p-md rounded-xl border border-outline-variant/20 flex flex-col gap-xs shadow-sm">
-            <span class="text-outline font-label-sm text-xs">Forms Processed</span>
-            <span class="font-h1 text-[28px] font-bold text-primary dark:text-primary-fixed">14</span>
-            <span class="text-xs text-tertiary-container dark:text-tertiary-fixed font-medium">↑ 100% submission rate</span>
-          </div>
-          <div class="bg-surface-container-lowest dark:bg-surface-container-lowest p-md rounded-xl border border-outline-variant/20 flex flex-col gap-xs shadow-sm">
-            <span class="text-outline font-label-sm text-xs">Documents Analyzed</span>
-            <span class="font-h1 text-[28px] font-bold text-secondary dark:text-secondary-fixed">8</span>
-            <span class="text-xs text-outline font-medium">Key dates tracked</span>
-          </div>
-          <div class="bg-surface-container-lowest dark:bg-surface-container-lowest p-md rounded-xl border border-outline-variant/20 flex flex-col gap-xs shadow-sm">
-            <span class="text-outline font-label-sm text-xs">Average Time Saved</span>
-            <span class="font-h1 text-[28px] font-bold text-tertiary-container dark:text-tertiary-fixed">45 mins</span>
-            <span class="text-xs text-outline font-medium">Per online application</span>
-          </div>
-          <div class="bg-surface-container-lowest dark:bg-surface-container-lowest p-md rounded-xl border border-outline-variant/20 flex flex-col gap-xs shadow-sm">
-            <span class="text-outline font-label-sm text-xs">DigiLocker Status</span>
-            <span class="font-h1 text-[28px] font-bold text-secondary dark:text-secondary-fixed">Linked</span>
-            <span class="text-xs text-tertiary-container dark:text-tertiary-fixed font-medium">✓ e-KYC Verified</span>
-          </div>
+        <!-- Dynamic Persona-Tailored Workspace Hub -->
+        <div id="persona-tailored-hub" class="w-full flex flex-col gap-md">
+          <!-- Populated dynamically via AccessibilityEngine.renderPersonaDashboard() -->
         </div>
 
-        <!-- Recent Forms Table -->
-        <div class="bg-surface-container-lowest dark:bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-md md:p-lg shadow-sm flex flex-col gap-md">
-          <div class="flex items-center justify-between">
-            <h3 class="font-h2 text-h2 text-primary dark:text-primary-fixed">Recent Form Applications</h3>
-            <button class="text-secondary hover:underline font-label-bold text-xs" onclick="switchView('myforms')">View All (4) →</button>
+        <!-- Standard Dashboard Components (Visible for General / Custom Persona) -->
+        <div id="general-dashboard-components" class="flex flex-col gap-lg">
+          <!-- Metric Stat Cards -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-md">
+            <div class="bg-surface-container-lowest dark:bg-surface-container-lowest p-md rounded-xl border border-outline-variant/20 flex flex-col gap-xs shadow-sm">
+              <span class="text-outline font-label-sm text-xs">Forms Processed</span>
+              <span class="font-h1 text-[28px] font-bold text-primary dark:text-primary-fixed">14</span>
+              <span class="text-xs text-tertiary-container dark:text-tertiary-fixed font-medium">↑ 100% submission rate</span>
+            </div>
+            <div class="bg-surface-container-lowest dark:bg-surface-container-lowest p-md rounded-xl border border-outline-variant/20 flex flex-col gap-xs shadow-sm">
+              <span class="text-outline font-label-sm text-xs">Documents Analyzed</span>
+              <span class="font-h1 text-[28px] font-bold text-secondary dark:text-secondary-fixed">8</span>
+              <span class="text-xs text-outline font-medium">Key dates tracked</span>
+            </div>
+            <div class="bg-surface-container-lowest dark:bg-surface-container-lowest p-md rounded-xl border border-outline-variant/20 flex flex-col gap-xs shadow-sm">
+              <span class="text-outline font-label-sm text-xs">Average Time Saved</span>
+              <span class="font-h1 text-[28px] font-bold text-tertiary-container dark:text-tertiary-fixed">45 mins</span>
+              <span class="text-xs text-outline font-medium">Per online application</span>
+            </div>
+            <div class="bg-surface-container-lowest dark:bg-surface-container-lowest p-md rounded-xl border border-outline-variant/20 flex flex-col gap-xs shadow-sm">
+              <span class="text-outline font-label-sm text-xs">DigiLocker Status</span>
+              <span class="font-h1 text-[28px] font-bold text-secondary dark:text-secondary-fixed">Linked</span>
+              <span class="text-xs text-tertiary-container dark:text-tertiary-fixed font-medium">✓ e-KYC Verified</span>
+            </div>
           </div>
-          <div id="dashboard-recent-forms" class="flex flex-col gap-sm">
-            <!-- Populated via JS -->
+
+          <!-- Recent Forms Table -->
+          <div class="bg-surface-container-lowest dark:bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-md md:p-lg shadow-sm flex flex-col gap-md">
+            <div class="flex items-center justify-between">
+              <h3 class="font-h2 text-h2 text-primary dark:text-primary-fixed">Recent Form Applications</h3>
+              <button class="text-secondary hover:underline font-label-bold text-xs" onclick="switchView('myforms')">View All (4) →</button>
+            </div>
+            <div id="dashboard-recent-forms" class="flex flex-col gap-sm">
+              <!-- Populated via JS -->
+            </div>
           </div>
         </div>
 
@@ -848,8 +856,95 @@
           </div>
         </div>
 
+        <!-- Accessibility & Persona Engine Settings -->
         <div class="bg-surface-container-lowest dark:bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-lg shadow-sm flex flex-col gap-md">
-          <h3 class="font-h2 text-h2 text-on-surface">Language & Accessibility</h3>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-h2 text-h2 text-on-surface flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-secondary">accessibility_new</span>
+                <span>Active Accessibility Persona</span>
+              </h3>
+              <p class="text-xs text-outline">Switch persona to automatically re-configure all voice, translation, and UI assistance features.</p>
+            </div>
+            <span id="active-persona-badge" class="badge-info px-sm py-xs rounded-full text-xs font-bold capitalize">General / Fast Auto-Fill</span>
+          </div>
+
+          <!-- Persona Selector Dropdown/Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-xs pt-xs">
+            <button type="button" class="border border-outline-variant/40 rounded-lg p-2 text-left hover:border-secondary transition-all" onclick="selectPersona('visual'); AccessibilityEngine.applyPersona('visual');">
+              <div class="flex items-center gap-1 text-secondary text-xs font-label-bold">
+                <span class="material-symbols-outlined text-[16px]">visibility_off</span> Visual / TTS
+              </div>
+              <p class="text-[10px] text-outline mt-0.5">TTS focus read & voice guide</p>
+            </button>
+
+            <button type="button" class="border border-outline-variant/40 rounded-lg p-2 text-left hover:border-secondary transition-all" onclick="selectPersona('motor'); AccessibilityEngine.applyPersona('motor');">
+              <div class="flex items-center gap-1 text-secondary text-xs font-label-bold">
+                <span class="material-symbols-outlined text-[16px]">mic</span> Hands-Free
+              </div>
+              <p class="text-[10px] text-outline mt-0.5">Voice commands & dictation</p>
+            </button>
+
+            <button type="button" class="border border-outline-variant/40 rounded-lg p-2 text-left hover:border-secondary transition-all" onclick="selectPersona('dyslexic'); AccessibilityEngine.applyPersona('dyslexic');">
+              <div class="flex items-center gap-1 text-secondary text-xs font-label-bold">
+                <span class="material-symbols-outlined text-[16px]">translate</span> Vernacular
+              </div>
+              <p class="text-[10px] text-outline mt-0.5">Auto-translate DOM & simple fill</p>
+            </button>
+
+            <button type="button" class="border border-outline-variant/40 rounded-lg p-2 text-left hover:border-secondary transition-all" onclick="selectPersona('hearing'); AccessibilityEngine.applyPersona('hearing');">
+              <div class="flex items-center gap-1 text-secondary text-xs font-label-bold">
+                <span class="material-symbols-outlined text-[16px]">subtitles</span> Visual HUD
+              </div>
+              <p class="text-[10px] text-outline mt-0.5">Always-On speech captions</p>
+            </button>
+
+            <button type="button" class="border border-outline-variant/40 rounded-lg p-2 text-left hover:border-secondary transition-all" onclick="selectPersona('elderly'); AccessibilityEngine.applyPersona('elderly');">
+              <div class="flex items-center gap-1 text-secondary text-xs font-label-bold">
+                <span class="material-symbols-outlined text-[16px]">elderly</span> Easy Assist
+              </div>
+              <p class="text-[10px] text-outline mt-0.5">Large touch targets & voice</p>
+            </button>
+
+            <button type="button" class="border border-outline-variant/40 rounded-lg p-2 text-left hover:border-secondary transition-all" onclick="selectPersona('general'); AccessibilityEngine.applyPersona('general');">
+              <div class="flex items-center gap-1 text-secondary text-xs font-label-bold">
+                <span class="material-symbols-outlined text-[16px]">bolt</span> Standard
+              </div>
+              <p class="text-[10px] text-outline mt-0.5">Multi-portal profile vault</p>
+            </button>
+          </div>
+
+          <!-- Feature Flags Preview -->
+          <div class="border-t border-outline-variant/20 pt-sm grid grid-cols-2 sm:grid-cols-3 gap-y-2 gap-x-4 text-xs">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="pref-tts-focus" class="rounded text-secondary focus:ring-secondary" onchange="AccessibilityEngine.toggleSetting('tts_on_focus', this.checked)"/>
+              <span class="text-on-surface">TTS on Field Focus</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="pref-voice-nav" class="rounded text-secondary focus:ring-secondary" onchange="AccessibilityEngine.toggleSetting('voice_nav_enabled', this.checked)"/>
+              <span class="text-on-surface">Voice Navigation</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="pref-auto-translate" class="rounded text-secondary focus:ring-secondary" onchange="AccessibilityEngine.toggleSetting('auto_translate_dom', this.checked)"/>
+              <span class="text-on-surface">Auto-Translate DOM</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="pref-captions" class="rounded text-secondary focus:ring-secondary" onchange="AccessibilityEngine.toggleSetting('visual_captions_enabled', this.checked)"/>
+              <span class="text-on-surface">Visual Captions HUD</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="pref-large-targets" class="rounded text-secondary focus:ring-secondary" onchange="AccessibilityEngine.toggleSetting('large_touch_targets', this.checked)"/>
+              <span class="text-on-surface">Large Touch Targets</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" id="pref-high-contrast" class="rounded text-secondary focus:ring-secondary" onchange="AccessibilityEngine.toggleSetting('high_contrast', this.checked)"/>
+              <span class="text-on-surface">High Contrast Mode</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="bg-surface-container-lowest dark:bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-lg shadow-sm flex flex-col gap-md">
+          <h3 class="font-h2 text-h2 text-on-surface">Language & Regional Dialect</h3>
           <div class="flex items-center justify-between">
             <div>
               <h4 class="font-label-bold text-on-surface">Default Application Language</h4>
@@ -865,6 +960,9 @@
     </main>
 
   </div>
+
+  <!-- Captions HUD for Visual Output -->
+  <div id="captions-hud" class="hidden"></div>
 
   <!-- ========================================================================= -->
   <!-- FLOATING SMART ASSISTANT ACTION BUTTON & DRAWER                           -->
@@ -912,12 +1010,16 @@
 
     <!-- Chat Input -->
     <div class="p-md border-t border-outline-variant/20 bg-surface dark:bg-surface-dim flex items-center gap-xs">
-      <input id="assistant-chat-input" type="text" placeholder="Ask anything about forms or schemes..." class="flex-1 bg-surface-container-lowest dark:bg-surface-container rounded-lg border border-outline-variant px-md py-sm text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary"/>
-      <button id="btn-send-assistant-msg" class="w-9 h-9 rounded-lg bg-secondary text-on-secondary flex items-center justify-center hover:brightness-90 active:scale-95 transition-all shadow-sm">
+      <input id="assistant-chat-input" type="text" placeholder="Ask anything or say 'Go to SaralVoice'..." class="flex-1 bg-surface-container-lowest dark:bg-surface-container rounded-lg border border-outline-variant px-md py-sm text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary"/>
+      <button id="btn-assistant-voice-input" class="w-9 h-9 rounded-lg bg-surface-container-high dark:bg-surface-container text-secondary hover:bg-secondary-container hover:text-on-secondary-container transition-all shadow-sm cursor-pointer" title="Speak Voice Command">
+        <span class="material-symbols-outlined text-[18px]">mic</span>
+      </button>
+      <button id="btn-send-assistant-msg" class="w-9 h-9 rounded-lg bg-secondary text-on-secondary flex items-center justify-center hover:brightness-90 active:scale-95 transition-all shadow-sm cursor-pointer">
         <span class="material-symbols-outlined text-[18px]">send</span>
       </button>
     </div>
   </div>
+
 
   <!-- ========================================================================= -->
   <!-- MODAL 1: AUTHENTICATION / JOIN SARALSETU (as in saral_setu_signup)        -->
@@ -979,8 +1081,75 @@
           <p class="font-label-sm text-[11px] text-on-surface-variant">Must be at least 8 characters long.</p>
         </div>
 
+        <!-- Accessible Persona Onboarding Selection -->
+        <div id="auth-persona-section" class="flex flex-col gap-xs mt-xs pt-xs border-t border-outline-variant/20">
+          <div class="flex items-center justify-between">
+            <label class="font-label-bold text-label-bold text-on-surface text-xs flex items-center gap-1">
+              <span class="material-symbols-outlined text-secondary text-[16px]">accessibility_new</span>
+              <span>How can SaralSetu assist you best?</span>
+            </label>
+            <span class="text-[10px] text-outline">Click to preview</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-xs" id="persona-selection-grid">
+            <!-- 1. Blind / Visually Impaired -->
+            <div class="persona-card border border-outline-variant/30 rounded-lg p-2 flex flex-col gap-0.5 bg-surface dark:bg-surface-container-low" data-persona="visual" onclick="selectPersona('visual')">
+              <div class="flex items-center gap-1 text-secondary">
+                <span class="material-symbols-outlined text-[18px]">visibility_off</span>
+                <span class="font-label-bold text-xs">Voice & TTS Read</span>
+              </div>
+              <p class="text-[10px] text-on-surface-variant leading-tight">Auto-reads fields on focus + audio guidance</p>
+            </div>
+
+            <!-- 2. Motor-Impaired / Weak Hands -->
+            <div class="persona-card border border-outline-variant/30 rounded-lg p-2 flex flex-col gap-0.5 bg-surface dark:bg-surface-container-low" data-persona="motor" onclick="selectPersona('motor')">
+              <div class="flex items-center gap-1 text-secondary">
+                <span class="material-symbols-outlined text-[18px]">mic</span>
+                <span class="font-label-bold text-xs">Hands-Free Voice</span>
+              </div>
+              <p class="text-[10px] text-on-surface-variant leading-tight">Voice navigation ("Next", "Submit") & dictation</p>
+            </div>
+
+            <!-- 3. Dyslexic / Low Literacy -->
+            <div class="persona-card border border-outline-variant/30 rounded-lg p-2 flex flex-col gap-0.5 bg-surface dark:bg-surface-container-low" data-persona="dyslexic" onclick="selectPersona('dyslexic')">
+              <div class="flex items-center gap-1 text-secondary">
+                <span class="material-symbols-outlined text-[18px]">translate</span>
+                <span class="font-label-bold text-xs">Native Regional</span>
+              </div>
+              <p class="text-[10px] text-on-surface-variant leading-tight">Auto-translates forms into local vernacular</p>
+            </div>
+
+            <!-- 4. Deaf / Hard of Hearing -->
+            <div class="persona-card border border-outline-variant/30 rounded-lg p-2 flex flex-col gap-0.5 bg-surface dark:bg-surface-container-low" data-persona="hearing" onclick="selectPersona('hearing')">
+              <div class="flex items-center gap-1 text-secondary">
+                <span class="material-symbols-outlined text-[18px]">subtitles</span>
+                <span class="font-label-bold text-xs">Visual Captions</span>
+              </div>
+              <p class="text-[10px] text-on-surface-variant leading-tight">Always-On visual HUD toasts for speech</p>
+            </div>
+
+            <!-- 5. Elderly Citizens -->
+            <div class="persona-card border border-outline-variant/30 rounded-lg p-2 flex flex-col gap-0.5 bg-surface dark:bg-surface-container-low" data-persona="elderly" onclick="selectPersona('elderly')">
+              <div class="flex items-center gap-1 text-secondary">
+                <span class="material-symbols-outlined text-[18px]">elderly</span>
+                <span class="font-label-bold text-xs">Elderly / Easy Assist</span>
+              </div>
+              <p class="text-[10px] text-on-surface-variant leading-tight">1-click fill, voice assist & large touch targets</p>
+            </div>
+
+            <!-- 6. General / Students -->
+            <div class="persona-card selected border border-secondary rounded-lg p-2 flex flex-col gap-0.5 bg-surface dark:bg-surface-container-low" data-persona="general" onclick="selectPersona('general')">
+              <div class="flex items-center gap-1 text-secondary">
+                <span class="material-symbols-outlined text-[18px]">bolt</span>
+                <span class="font-label-bold text-xs">Fast Auto-Fill</span>
+              </div>
+              <p class="text-[10px] text-on-surface-variant leading-tight">Instant multi-portal profile vault population</p>
+            </div>
+          </div>
+        </div>
+
         <button id="auth-submit-btn" class="mt-sm w-full bg-secondary hover:brightness-90 text-on-secondary font-label-bold text-label-bold py-md px-lg rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 text-sm shadow-sm" type="submit">
-          Create Account
+          Create Account & Activate Profile
         </button>
       </form>
 

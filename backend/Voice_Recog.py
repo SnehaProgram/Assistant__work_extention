@@ -21,10 +21,19 @@ except ImportError:
 from pathlib import Path
 
 # FastAPI & WebSockets
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Request
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Request, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel
+
+# Database & Auth Modules
+from database import init_db, get_db, User, UserProfile, DocumentGuide, FormSubmission
+from auth import (
+    get_password_hash, verify_password, create_access_token, get_current_user,
+    UserSignUpSchema, UserLoginSchema, TokenSchema, ProfileUpdateSchema
+)
+from sqlalchemy.orm import Session
+
 
 # Load Environment Variables from backend/.env or root .env
 env_path = Path(__file__).parent / ".env"
@@ -337,10 +346,25 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Enable CORS for Frontend
+# Startup event to auto-initialize DB tables
+@app.on_event("startup")
+def on_startup():
+    try:
+        init_db()
+        logger.info("Database tables initialized successfully on startup.")
+    except Exception as e:
+        logger.error(f"Failed to initialize database tables: {e}")
+
+# Enable CORS for Dashboard & Chrome Extension
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5500", "http://127.0.0.1:5500",
+        "http://localhost:3000", "http://127.0.0.1:3000",
+        "http://localhost:8000", "http://127.0.0.1:8000",
+        "*"
+    ],
+    allow_origin_regex=r"chrome-extension://.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -352,8 +376,202 @@ bhasini_engine = BhasiniEngine(BHASINI_API_KEY, BHASINI_USER_ID, BHASINI_AUTHORI
 
 
 # ---------------------------------------------------------------------------
+# API V1 Authentication & Protected User Routes
+# ---------------------------------------------------------------------------
+@app.post("/api/v1/auth/signup")
+async def signup(user_data: UserSignUpSchema, db: Session = Depends(get_db)):
+    """User registration endpoint."""
+    existing_user = db.query(User).filter(User.email == user_data.email).first()
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User with this email already exists"
+        )
+    
+    hashed_pwd = get_password_hash(user_data.password)
+    new_user = User(
+        email=user_data.email,
+        full_name=user_data.full_name,
+        hashed_password=hashed_pwd,
+        is_active=True
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    # Create default user profile vault
+    profile = UserProfile(
+        user_id=new_user.id,
+        full_name=user_data.full_name,
+        persona_type=user_data.persona_type or "general"
+    )
+    db.add(profile)
+    db.commit()
+
+    token = create_access_token({"sub": new_user.email})
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user_id": new_user.id,
+        "email": new_user.email,
+        "full_name": new_user.full_name
+    }
+
+
+@app.post("/api/v1/auth/login")
+async def login(credentials: UserLoginSchema, db: Session = Depends(get_db)):
+    """User login endpoint."""
+    user = db.query(User).filter(User.email == credentials.email).first()
+    if not user or not verify_password(credentials.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"}
+        )
+    
+    token = create_access_token({"sub": user.email})
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user_id": user.id,
+        "email": user.email,
+        "full_name": user.full_name
+    }
+
+
+@app.get("/api/v1/profile")
+async def get_profile(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Fetch current user's profile vault and accessibility preferences."""
+    profile = db.query(UserProfile).filter(UserProfile.user_id == current_user.id).first()
+    if not profile:
+        profile = UserProfile(user_id=current_user.id, full_name=current_user.full_name)
+        db.add(profile)
+        db.commit()
+        db.refresh(profile)
+    
+    return {
+        "user": {
+            "id": current_user.id,
+            "email": current_user.email,
+            "full_name": current_user.full_name,
+            "created_at": current_user.created_at.isoformat() if current_user.created_at else None
+        },
+        "profile": {
+            "full_name": profile.full_name,
+            "dob": profile.dob,
+            "address": profile.address,
+            "pan_number": profile.pan_number,
+            "aadhaar_number": profile.aadhaar_number,
+            "mobile_number": profile.mobile_number,
+            "gross_income": profile.gross_income,
+            "digilocker_linked": profile.digilocker_linked,
+            "persona_type": profile.persona_type,
+            "preferred_language": profile.preferred_language,
+            "preferences": {
+                "tts_on_focus": profile.tts_on_focus,
+                "voice_nav_enabled": profile.voice_nav_enabled,
+                "voice_dictation_enabled": profile.voice_dictation_enabled,
+                "auto_translate_dom": profile.auto_translate_dom,
+                "visual_captions_enabled": profile.visual_captions_enabled,
+                "large_touch_targets": profile.large_touch_targets,
+                "high_contrast": profile.high_contrast
+            }
+        }
+    }
+
+
+@app.put("/api/v1/profile")
+async def update_profile(updates: ProfileUpdateSchema, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Update current user's profile vault and preferences."""
+    profile = db.query(UserProfile).filter(UserProfile.user_id == current_user.id).first()
+    if not profile:
+        profile = UserProfile(user_id=current_user.id, full_name=current_user.full_name)
+        db.add(profile)
+    
+    for key, val in updates.dict(exclude_unset=True).items():
+        if hasattr(profile, key) and val is not None:
+            setattr(profile, key, val)
+    
+    db.commit()
+    return {"status": "success", "message": "Profile updated successfully"}
+
+
+@app.get("/api/v1/documents")
+async def get_documents(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Retrieve document guides for the logged in user."""
+    docs = db.query(DocumentGuide).filter(
+        (DocumentGuide.user_id == current_user.id) | (DocumentGuide.user_id == None)
+    ).all()
+    return [
+        {
+            "id": d.id,
+            "document_name": d.document_name,
+            "file_size": d.file_size,
+            "pages": d.pages,
+            "summary_en": d.summary_en,
+            "summary_hi": d.summary_hi,
+            "upload_date": d.upload_date.isoformat() if d.upload_date else None
+        }
+        for d in docs
+    ]
+
+
+@app.post("/api/v1/documents")
+async def create_document(req: dict, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Save a new document guide."""
+    doc = DocumentGuide(
+        user_id=current_user.id,
+        document_name=req.get("document_name", "Document.pdf"),
+        file_size=req.get("file_size", "1.5 MB"),
+        pages=req.get("pages", 5),
+        summary_en=req.get("summary_en", ""),
+        summary_hi=req.get("summary_hi", "")
+    )
+    db.add(doc)
+    db.commit()
+    db.refresh(doc)
+    return {"status": "success", "id": doc.id}
+
+
+@app.get("/api/v1/history")
+async def get_history(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Retrieve form submission history for the logged in user."""
+    submissions = db.query(FormSubmission).filter(
+        (FormSubmission.user_id == current_user.id) | (FormSubmission.user_id == None)
+    ).all()
+    return [
+        {
+            "id": s.id,
+            "form_title": s.form_title,
+            "department": s.department,
+            "status": s.status,
+            "progress": s.progress,
+            "submitted_at": s.submitted_at.isoformat() if s.submitted_at else None
+        }
+        for s in submissions
+    ]
+
+
+@app.post("/api/v1/history")
+async def create_history(req: dict, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Record a form submission in user history."""
+    submission = FormSubmission(
+        user_id=current_user.id,
+        form_title=req.get("form_title", "Form Submission"),
+        department=req.get("department", "General Department"),
+        status=req.get("status", "Submitted"),
+        progress=req.get("progress", 100)
+    )
+    db.add(submission)
+    db.commit()
+    db.refresh(submission)
+    return {"status": "success", "id": submission.id}
+
+
+# ---------------------------------------------------------------------------
 # REST Endpoints
 # ---------------------------------------------------------------------------
+
 @app.get("/")
 async def root():
     return {
