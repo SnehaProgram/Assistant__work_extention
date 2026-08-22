@@ -1,0 +1,20 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment files
+.env
+backend/.env
+
+# Local SQLite databases
+*.db
+backend/*.db
+saralsetu.db
+backend/saralsetu.db
+
+# OS & IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

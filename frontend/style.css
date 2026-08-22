@@ -307,3 +307,61 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
   border-radius: 50%;
   display: inline-block;
 }
+
+/* Accessibility Persona Themes & Enhancements */
+.large-targets button,
+.large-targets input,
+.large-targets select,
+.large-targets textarea,
+.large-targets a {
+  min-height: 48px !important;
+  font-size: 1.05rem !important;
+}
+
+.high-contrast {
+  --color-on-surface: #000000;
+  --color-outline: #000000;
+  --color-outline-variant: #333333;
+}
+.dark.high-contrast {
+  --color-on-surface: #ffffff;
+  --color-outline: #ffffff;
+  --color-outline-variant: #cccccc;
+}
+
+/* Captions HUD */
+#captions-hud {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(7, 2, 53, 0.92);
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.2);
+  z-index: 60;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  max-width: 90vw;
+  text-align: center;
+}
+
+/* Persona Selection Cards */
+.persona-card {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+.persona-card:hover {
+  transform: translateY(-2px);
+}
+.persona-card.selected {
+  border-color: var(--color-secondary) !important;
+  background-color: var(--color-secondary-fixed) !important;
+}
+.dark .persona-card.selected {
+  background-color: var(--color-secondary-container) !important;
+}
